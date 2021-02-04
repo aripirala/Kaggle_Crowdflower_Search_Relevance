@@ -7,7 +7,7 @@ import torch.nn as nn
 def loss_fn(outputs, targets):
     targets = targets - 1
     targets = targets.long()
-    print(targets)
+    # print(targets)
     return nn.CrossEntropyLoss()(outputs, targets)
 
 def confusion_matrix(rater_a, rater_b, min_rating=None, max_rating=None):

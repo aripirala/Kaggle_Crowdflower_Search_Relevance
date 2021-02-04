@@ -20,7 +20,7 @@ def train_loop_fn(data_loader, model, optimizer, scheduler=None):
         token_type_ids = data['token_type_ids']
         targets = data['targets']
         targets = targets.long()
-        print(targets)
+        # print(targets)
 
         if device:
             ids = ids.to(device, dtype=torch.long)
@@ -76,8 +76,8 @@ def eval_loop_fn(data_loader, model):
 def run():
     data_df = pd.read_csv('../input/train.csv')
     train_df, valid_df = train_test_split(data_df, random_state=42, test_size=0.1)
-    train_df = train_df.reset_index(drop=True)
-    valid_df = valid_df.reset_index(drop=True)
+    train_df = train_df.reset_index(drop=True).sample(frac=0.1)
+    valid_df = valid_df.reset_index(drop=True).sample(frac=0.1)
 
     train_y = train_df['median_relevance'].values
     valid_y = valid_df['median_relevance'].values
@@ -126,7 +126,7 @@ def run():
         print(f'time take to run a epoch - {epoch_time_elapsed}')
         print(f'Epoch - Training loss - {epoch_train_loss} Valid loss - {epoch_valid_loss}')
 
-        qw_kappa = quadratic_weighted_kappa(targets, outputs)
+        qw_kappa = quadratic_weighted_kappa(targets.squeeze().numpy(), outputs.numpy())
         print(f'Quadratic Weighted Kappa: {qw_kappa}')
 
 if __name__ == '__main__':
